@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+
+require 'fileutils'
+
+FileUtils.mkdir_p("_posts")
+# FileUtils.mkdir_p("_drafts")
