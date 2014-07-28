@@ -11,6 +11,8 @@ Feature: Import posts
             "posts": [
                 {
                     "slug": "welcome-to-ghost",
+                    "markdown": "You're live!",
+                    "published_at": "2014-02-21T01:14:57.000Z"
                 }
             ]
         }
@@ -18,3 +20,7 @@ Feature: Import posts
     """
     When I run `jekyll_ghost_importer GhostBackup.json`
     Then a directory named "_posts" should exist
+    Then the file "_posts/2014-02-21-welcome-to-ghost.markdown" should contain:
+    """
+    You're live!
+    """

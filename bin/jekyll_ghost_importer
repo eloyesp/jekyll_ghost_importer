@@ -1,6 +1,20 @@
 #!/usr/bin/env ruby
 
 require 'fileutils'
+require 'json'
 
 FileUtils.mkdir_p("_posts")
 # FileUtils.mkdir_p("_drafts")
+
+json = JSON.parse File.read(ARGV.pop), symbolize_names: true
+
+posts = json[:data][:posts]
+
+posts.each do |post|
+  date = Date.parse(post[:published_at]).strftime('%Y-%m-%d')
+  slug = post[:slug]
+  body = post[:markdown]
+  basename = "#{ date }-#{ slug }.markdown"
+  filename = File.join '_posts', basename
+  File.write filename, body
+end
