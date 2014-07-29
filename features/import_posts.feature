@@ -98,43 +98,14 @@ Feature: Import posts
                     "updated_at": "2014-05-25T02:00:35.000Z",
                     "updated_by": 1
                 }
-            ],
-            "tags": [
-                {
-                    "id": 1,
-                    "uuid": "16f75a15-420a-444d-9aad-8edd05f68587",
-                    "name": "Getting Started",
-                    "slug": "getting-started",
-                    "description": null,
-                    "parent_id": null,
-                    "meta_title": null,
-                    "meta_description": null,
-                    "created_at": "2014-02-21T01:14:57.000Z",
-                    "created_by": 1,
-                    "updated_at": "2014-02-21T01:14:57.000Z",
-                    "updated_by": 1
-                }
-            ],
-            "posts_tags": [
-                {
-                    "id": 1,
-                    "post_id": 1,
-                    "tag_id": 1
-                }
             ]
         }
     }
     """
     When I run `jekyll_ghost_importer GhostBackup.json`
-    Then a directory named "_posts" should exist
-    Then the file "_posts/2014-02-21-welcome-to-ghost.markdown" should contain:
-    """
-    You're live!
-    """
-    Then the file "_posts/2014-02-21-tengo-otro-blog.markdown" should contain:
-    """
-    Y con este ya son tres.
-    """
+    Then the following files should exist:
+      | _posts/2014-02-21-welcome-to-ghost.markdown |
+      | _posts/2014-02-21-tengo-otro-blog.markdown  |
 
   Scenario: Import a backup file with drafts
     Given a file named "GhostBackup.json" with:
