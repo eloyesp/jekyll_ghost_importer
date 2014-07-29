@@ -4,17 +4,24 @@ require 'fileutils'
 require 'json'
 
 FileUtils.mkdir_p("_posts")
-# FileUtils.mkdir_p("_drafts")
+FileUtils.mkdir_p("_drafts")
 
 json = JSON.parse File.read(ARGV.pop), symbolize_names: true
 
 posts = json[:data][:posts]
 
 posts.each do |post|
-  date = Date.parse(post[:published_at]).strftime('%Y-%m-%d')
+  date = Date.parse(post[:published_at]).strftime('%Y-%m-%d') if post[:published_at]
   slug = post[:slug]
   body = post[:markdown]
-  basename = "#{ date }-#{ slug }.markdown"
-  filename = File.join '_posts', basename
+  draft = post[:status] == 'draft'
+  basename = if draft
+               "#{ slug }.markdown"
+             else
+               "#{ date }-#{ slug }.markdown"
+             end
+  folder = draft ? '_drafts' : '_posts'
+  filename = File.join folder, basename
+  puts filename, basename
   File.write filename, body
 end
