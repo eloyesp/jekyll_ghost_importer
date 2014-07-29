@@ -2,6 +2,7 @@
 
 require 'fileutils'
 require 'json'
+require 'date'
 
 FileUtils.mkdir_p("_posts")
 FileUtils.mkdir_p("_drafts")
