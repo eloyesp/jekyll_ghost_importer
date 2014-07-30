@@ -3,6 +3,7 @@
 require 'fileutils'
 require 'json'
 require 'date'
+require 'yaml'
 
 FileUtils.mkdir_p("_posts")
 FileUtils.mkdir_p("_drafts")
@@ -12,17 +13,23 @@ json = JSON.parse File.read(ARGV.pop), symbolize_names: true
 posts = json[:data][:posts]
 
 posts.each do |post|
-  date = Date.parse(post[:published_at]).strftime('%Y-%m-%d') if post[:published_at]
+  date = DateTime.parse(post[:published_at]) if post[:published_at]
   slug = post[:slug]
-  body = post[:markdown]
+  front_matter_hash = {
+    'layout' => "post",
+    'title'  => post[:title]
+  }
+  front_matter_hash['date'] = date.strftime('%Y-%m-%d %H:%M:%S') if date
+
+  body = front_matter_hash.to_yaml + "---\n\n" + post[:markdown]
   draft = post[:status] == 'draft'
   basename = if draft
                "#{ slug }.markdown"
              else
-               "#{ date }-#{ slug }.markdown"
+               "#{ date.strftime('%Y-%m-%d') }-#{ slug }.markdown"
              end
   folder = draft ? '_drafts' : '_posts'
   filename = File.join folder, basename
-  puts filename, basename
+  puts "Importing filename..."
   File.write filename, body
 end

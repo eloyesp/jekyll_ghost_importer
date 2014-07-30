@@ -10,8 +10,11 @@ Feature: Import posts
         "data": {
             "posts": [
                 {
+                    "title": "Welcome to Ghost",
                     "slug": "welcome-to-ghost",
                     "markdown": "You're live!",
+                    "featured": 0,
+                    "status": "published",
                     "published_at": "2014-02-21T01:14:57.000Z"
                 }
             ]
@@ -22,6 +25,12 @@ Feature: Import posts
     Then a directory named "_posts" should exist
     Then the file "_posts/2014-02-21-welcome-to-ghost.markdown" should contain:
     """
+    ---
+    layout: post
+    title: Welcome to Ghost
+    date: '2014-02-21 01:14:57'
+    ---
+
     You're live!
     """
 
