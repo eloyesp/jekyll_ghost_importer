@@ -3,6 +3,10 @@
 This program let you import your post on [ghost][1] to [jekyll][2]. It uses a
 [ghost backup][3] to read the data and creates posts and drafts from them.
 
+ [1]: https://ghost.org/
+ [2]: http://jekyllrb.com/
+ [3]: http://support.ghost.org/import-and-export-my-ghost-blog-settings-and-data/
+
 ## Installation
 
     $ gem install jekyll_ghost_importer
@@ -14,7 +18,8 @@ jekyll blog, run:
 
     $ jekyll_ghost_importer GhostBackup.json
 
-And then follow the instructions.
+This will create the `_posts` folder and create there a file for each post in
+the backup and will create a `_drafts` folder for yours drafts.
 
 ## Contributing
 
