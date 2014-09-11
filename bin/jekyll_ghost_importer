@@ -10,7 +10,11 @@ FileUtils.mkdir_p("_drafts")
 
 json = JSON.parse File.read(ARGV.pop), symbolize_names: true
 
-posts = json[:data][:posts]
+unless json[:data].nil?
+  posts = json[:data][:posts]
+else
+  posts = json[:db].first[:data][:posts]
+end
 
 posts.each do |post|
   date = DateTime.parse(post[:published_at]) if post[:published_at]
