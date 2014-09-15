@@ -21,6 +21,11 @@ jekyll blog, run:
 This will create the `_posts` folder and create there a file for each post in
 the backup and will create a `_drafts` folder for yours drafts.
 
+## Thanks
+
+- To Fahri Cihan Demirci ([@femnad](https://github.com/femnad)) for
+  adding support for the new backup format.
+
 ## Contributing
 
 1. Fork it ( https://github.com/eloyesp/jekyll-ghost-importer/fork )
