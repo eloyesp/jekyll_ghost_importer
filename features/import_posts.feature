@@ -234,3 +234,30 @@ Feature: Import posts
     """
     Something here
     """
+
+  Scenario: Import a backup file with a new format
+    Given a ghost backup file version 003 with some sample posts
+    When I run `jekyll_ghost_importer GhostBackup.json`
+    Then it should pass with:
+    """
+    3 posts imported ( 1 draft )
+    """
+    And a directory named "_posts" should exist
+    And the following files should exist:
+      | _posts/2015-02-19-welcome-to-ghost.markdown |
+      | _posts/2015-02-19-new_post.markdown  |
+    And the file "_posts/2015-02-19-welcome-to-ghost.markdown" should contain:
+    """
+    ---
+    layout: post
+    title: Welcome to Ghost
+    date: '2015-02-19 11:49:14'
+    ---
+
+    You're live!
+    """
+    And a directory named "_drafts" should exist
+    And the file "_drafts/test-draft.markdown" should contain:
+    """
+    Something here
+    """

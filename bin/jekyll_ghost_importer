@@ -16,8 +16,15 @@ else
   posts = json[:db].first[:data][:posts]
 end
 
+@imported = Hash.new(0)
+
 posts.each do |post|
-  date = DateTime.parse(post[:published_at]) if post[:published_at]
+  date = case post[:published_at]
+         when String
+           DateTime.parse(post[:published_at])
+         when Integer
+           Time.at(post[:published_at] / 1000).utc.to_datetime
+         end
   slug = post[:slug]
   front_matter_hash = {
     'layout' => "post",
@@ -34,6 +41,10 @@ posts.each do |post|
              end
   folder = draft ? '_drafts' : '_posts'
   filename = File.join folder, basename
-  puts "Importing filename..."
+  puts "Importing #{ filename }"
   File.write filename, body
+  @imported[:posts] += 1
+  @imported[:drafts] += 1 if draft
 end
+
+puts "#{ @imported[:posts] } posts imported ( #{ @imported[:drafts] } draft )"
