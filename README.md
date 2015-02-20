@@ -1,9 +1,14 @@
+![Code Climate](http://img.shields.io/codeclimate/github/eloyesp/jekyll_ghost_importer.svg)
+![Dependencies status](http://img.shields.io/gemnasium/eloyesp/jekyll_ghost_importer.svg)
+![Build status](http://img.shields.io/travis/eloyesp/jekyll_ghost_importer.svg)
+![Gem Version](http://img.shields.io/gem/v/jekyll_ghost_importer.svg)
+
 # Jekyll ghost importer
 
 This program let you import your post on [ghost][1] to [jekyll][2]. It uses a
 [ghost backup][3] to read the data and creates posts and drafts from them.
 
- [1]: https://ghost.org/
+ [1]: https://ghost.org/about/
  [2]: http://jekyllrb.com/
  [3]: http://support.ghost.org/import-and-export-my-ghost-blog-settings-and-data/
 
