@@ -8,12 +8,34 @@ require 'yaml'
 FileUtils.mkdir_p("_posts")
 FileUtils.mkdir_p("_drafts")
 
-json = JSON.parse File.read(ARGV.pop), symbolize_names: true
+@json = JSON.parse File.read(ARGV.pop), symbolize_names: true
 
-unless json[:data].nil?
-  posts = json[:data][:posts]
+unless @json[:data].nil?
+  posts = @json[:data][:posts]
 else
-  posts = json[:db].first[:data][:posts]
+  posts = @json[:db].first[:data][:posts]
+end
+
+def there_are_tags?
+  @tags ||=
+    @json[:db] &&
+    @json[:db].first[:data][:posts_tags] &&
+    @json[:db].first[:data][:tags]
+end
+
+def tags_for post
+  if there_are_tags?
+    post_tags = @json[:db].first[:data][:posts_tags].select do |pt|
+      pt[:post_id] == post[:id]
+    end
+    tags_ids = post_tags.map { |pt| pt[:tag_id] }
+    tags = @json[:db].first[:data][:tags].select do |t|
+      tags_ids.include? t[:id]
+    end
+    tags.map { |t| t[:slug] }
+  else
+    return nil
+  end
 end
 
 @imported = Hash.new(0)
@@ -31,6 +53,8 @@ posts.each do |post|
     'title'  => post[:title]
   }
   front_matter_hash['date'] = date.strftime('%Y-%m-%d %H:%M:%S') if date
+  tags = tags_for post
+  front_matter_hash['tags'] = tags.join(' ') if tags
 
   body = front_matter_hash.to_yaml + "---\n\n" + post[:markdown]
   draft = post[:status] == 'draft'

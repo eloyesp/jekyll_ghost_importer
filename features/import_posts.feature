@@ -252,6 +252,7 @@ Feature: Import posts
     layout: post
     title: Welcome to Ghost
     date: '2015-02-19 11:49:14'
+    tags: getting-started
     ---
 
     You're live!
