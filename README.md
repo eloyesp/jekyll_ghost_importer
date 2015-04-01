@@ -1,7 +1,6 @@
-![Code Climate](http://img.shields.io/codeclimate/github/eloyesp/jekyll_ghost_importer.svg)
-![Dependencies status](http://img.shields.io/gemnasium/eloyesp/jekyll_ghost_importer.svg)
-![Build status](http://img.shields.io/travis/eloyesp/jekyll_ghost_importer.svg)
-![Gem Version](http://img.shields.io/gem/v/jekyll_ghost_importer.svg)
+[![Code Climate](http://img.shields.io/codeclimate/github/eloyesp/jekyll_ghost_importer.svg)](https://codeclimate.com/github/eloyesp/jekyll_ghost_importer)
+[![Build status](http://img.shields.io/travis/eloyesp/jekyll_ghost_importer.svg)](https://travis-ci.org/eloyesp/jekyll_ghost_importer)
+[![Gem Version](http://img.shields.io/gem/v/jekyll_ghost_importer.svg)](https://rubygems.org/gems/jekyll_ghost_importer)
 
 # Jekyll ghost importer
 
