@@ -263,3 +263,111 @@ Feature: Import posts
     """
     Something here
     """
+
+  Scenario: Import a draft with an invalid published_at date
+    Given a file named "draft_with_invalid_date.json" with:
+    """
+    {
+        "db": [
+            {
+                "meta": {
+                    "exported_on": 1424346829618,
+                    "version": "003"
+                },
+                "data": {
+                "posts": [
+                  {
+                      "id": 824,
+                      "uuid": "3f932273-14ef-4a7d-8119-25cfee021b0c",
+                      "title": "Are you using a fixed width font for development?",
+                      "slug": "temp-slug-9",
+                      "markdown": "This is just a draft, so the date doesn't really matter",
+                      "html": "<p>This is just a draft, so the date doesn't really matter</p>",
+                      "image": null,
+                      "featured": 0,
+                      "page": 0,
+                      "status": "draft",
+                      "language": "en_US",
+                      "meta_title": null,
+                      "meta_description": null,
+                      "author_id": 1,
+                      "created_at": "2013-05-22T08:30:25.000Z",
+                      "created_by": 1,
+                      "updated_at": "2013-05-22T08:30:25.000Z",
+                      "updated_by": 1,
+                      "published_at": "0000-00-00 00:00:00",
+                      "published_by": 1,
+                      "visibility": "public",
+                      "mobiledoc": null
+                   }
+                 ],
+                 "users": [
+                        {
+                            "id": 1,
+                            "uuid": "6a013e8f-24d3-4c77-901a-7e57f6537f47",
+                            "name": "test test2",
+                            "slug": "test",
+                            "password": "some_password",
+                            "email": "my_email",
+                            "image": null,
+                            "cover": null,
+                            "bio": null,
+                            "website": null,
+                            "location": null,
+                            "accessibility": null,
+                            "status": "active",
+                            "language": "en_US",
+                            "meta_title": null,
+                            "meta_description": null,
+                            "last_login": 1424346712870,
+                            "created_at": 1424346562473,
+                            "created_by": 1,
+                            "updated_at": 1424346712870,
+                            "updated_by": 1
+                        }
+                    ],
+                    "tags": [
+                        {
+                            "id": 1,
+                            "uuid": "befcb6c7-c777-4a65-a272-6e2577cade61",
+                            "name": "Getting Started",
+                            "slug": "getting-started",
+                            "description": null,
+                            "image": null,
+                            "hidden": 0,
+                            "parent_id": null,
+                            "meta_title": null,
+                            "meta_description": null,
+                            "created_at": 1424346554967,
+                            "created_by": 1,
+                            "updated_at": 1424346554967,
+                            "updated_by": 1
+                        }
+                    ],
+                    "posts_tags": [
+                        {
+                            "id": 1,
+                            "post_id": 1,
+                            "tag_id": 1
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+    """
+    When I run `jekyll_ghost_importer draft_with_invalid_date.json`
+    Then it should pass with:
+    """
+    1 posts imported ( 1 draft )
+    """
+    And a directory named "_drafts" should exist
+    And the file "_drafts/temp-slug-9.markdown" should contain:
+    """
+    ---
+    layout: post
+    title: Are you using a fixed width font for development?
+    ---
+    
+    This is just a draft, so the date doesn't really matter
+    """

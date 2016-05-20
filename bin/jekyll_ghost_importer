@@ -69,7 +69,7 @@ class Post
     unless draft?
       front_matter_hash['date'] = date.strftime('%Y-%m-%d %H:%M:%S') if date
     end
-    front_matter_hash['tags'] = tags if tags
+    front_matter_hash['tags'] = tags if tags && !tags.empty?
     front_matter_hash
   end
 
