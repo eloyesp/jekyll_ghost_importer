@@ -33,8 +33,6 @@ def tags_for post
       tags_ids.include? t[:id]
     end
     tags.map { |t| t[:slug] }
-  else
-    return nil
   end
 end
 
@@ -54,7 +52,7 @@ posts.each do |post|
   }
   front_matter_hash['date'] = date.strftime('%Y-%m-%d %H:%M:%S') if date
   tags = tags_for post
-  front_matter_hash['tags'] = tags.join(' ') if tags
+  front_matter_hash['tags'] = tags if tags
 
   body = front_matter_hash.to_yaml + "---\n\n" + post[:markdown]
   draft = post[:status] == 'draft'
