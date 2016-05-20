@@ -1,7 +1,7 @@
 # coding: utf-8
 Gem::Specification.new do |spec|
   spec.name          = "jekyll_ghost_importer"
-  spec.version       = "0.3.0"
+  spec.version       = "0.4.0"
   spec.authors       = ["Eloy Espinaco"]
   spec.email         = ["eloyesp@gmail.com"]
   spec.summary       = %q{Import your posts from a ghost backup file.}
@@ -13,6 +13,6 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
-  spec.add_development_dependency "cucumber"
-  spec.add_development_dependency "aruba"
+  spec.add_development_dependency "cucumber", '~> 1.3'
+  spec.add_development_dependency "aruba",    '~> 0'
 end
