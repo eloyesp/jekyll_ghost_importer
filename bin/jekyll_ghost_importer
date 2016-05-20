@@ -8,65 +8,106 @@ require 'yaml'
 FileUtils.mkdir_p("_posts")
 FileUtils.mkdir_p("_drafts")
 
-@json = JSON.parse File.read(ARGV.pop), symbolize_names: true
+$json = JSON.parse File.read(ARGV.pop), symbolize_names: true
 
-unless @json[:data].nil?
-  posts = @json[:data][:posts]
+unless $json[:data].nil?
+  posts = $json[:data][:posts]
 else
-  posts = @json[:db].first[:data][:posts]
+  posts = $json[:db].first[:data][:posts]
 end
 
 def there_are_tags?
   @tags ||=
-    @json[:db] &&
-    @json[:db].first[:data][:posts_tags] &&
-    @json[:db].first[:data][:tags]
-end
-
-def tags_for post
-  if there_are_tags?
-    post_tags = @json[:db].first[:data][:posts_tags].select do |pt|
-      pt[:post_id] == post[:id]
-    end
-    tags_ids = post_tags.map { |pt| pt[:tag_id] }
-    tags = @json[:db].first[:data][:tags].select do |t|
-      tags_ids.include? t[:id]
-    end
-    tags.map { |t| t[:slug] }
-  end
+    $json[:db] &&
+    $json[:db].first[:data][:posts_tags] &&
+    $json[:db].first[:data][:tags]
 end
 
 @imported = Hash.new(0)
 
-posts.each do |post|
-  date = case post[:published_at]
-         when String
-           DateTime.parse(post[:published_at])
-         when Integer
-           Time.at(post[:published_at] / 1000).utc.to_datetime
-         end
-  slug = post[:slug]
-  front_matter_hash = {
-    'layout' => "post",
-    'title'  => post[:title]
-  }
-  front_matter_hash['date'] = date.strftime('%Y-%m-%d %H:%M:%S') if date
-  tags = tags_for post
-  front_matter_hash['tags'] = tags if tags
+class Post
+  # the source of the post
+  attr_reader :post
 
-  body = front_matter_hash.to_yaml + "---\n\n" + post[:markdown]
-  draft = post[:status] == 'draft'
-  basename = if draft
-               "#{ slug }.markdown"
-             else
-               "#{ date.strftime('%Y-%m-%d') }-#{ slug }.markdown"
-             end
-  folder = draft ? '_drafts' : '_posts'
-  filename = File.join folder, basename
-  puts "Importing #{ filename }"
-  File.write filename, body
+  def initialize post
+    @post = post
+  end
+
+  def import
+    puts "Importing #{ filename }"
+    File.write filename, full_body
+  end
+
+  def draft?
+    post[:status] == 'draft'
+  end
+
+  private
+
+  def folder
+    draft? ? '_drafts' : '_posts'
+  end
+
+  def filename
+    File.join folder, basename
+  end
+
+  def date
+    case post[:published_at]
+    when String
+      DateTime.parse(post[:published_at])
+    when Integer
+      Time.at(post[:published_at] / 1000).utc.to_datetime
+    end
+  end
+
+  def front_matter
+    front_matter_hash = {
+      'layout' => "post",
+      'title'  => post[:title]
+    }
+    unless draft?
+      front_matter_hash['date'] = date.strftime('%Y-%m-%d %H:%M:%S') if date
+    end
+    front_matter_hash['tags'] = tags if tags
+    front_matter_hash
+  end
+
+  def slug
+    post[:slug]
+  end
+
+  def tags
+    if there_are_tags?
+      post_tags = $json[:db].first[:data][:posts_tags].select do |pt|
+        pt[:post_id] == post[:id]
+      end
+      tags_ids = post_tags.map { |pt| pt[:tag_id] }
+      tags = $json[:db].first[:data][:tags].select do |t|
+        tags_ids.include? t[:id]
+      end
+      tags.map { |t| t[:slug] }
+    end
+  end
+
+  def full_body
+    front_matter.to_yaml + "---\n\n" + post[:markdown]
+  end
+
+  def basename
+    if draft?
+      "#{ slug }.markdown"
+    else
+      "#{ date.strftime('%Y-%m-%d') }-#{ slug }.markdown"
+    end
+  end
+end
+
+posts.each do |post|
+  post = Post.new post
+  post.import
   @imported[:posts] += 1
-  @imported[:drafts] += 1 if draft
+  @imported[:drafts] += 1 if post.draft?
 end
 
 puts "#{ @imported[:posts] } posts imported ( #{ @imported[:drafts] } draft )"
