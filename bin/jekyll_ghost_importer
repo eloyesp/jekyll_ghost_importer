@@ -66,6 +66,10 @@ class Post
       'layout' => "post",
       'title'  => post[:title]
     }
+    
+    front_matter_hash['featured'] = true if post[:featured] == 1
+    front_matter_hash['image'] = post[:image] if post[:image] != nil
+    
     unless draft?
       front_matter_hash['date'] = date.strftime('%Y-%m-%d %H:%M:%S') if date
     end
