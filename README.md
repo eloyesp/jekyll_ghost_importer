@@ -30,6 +30,12 @@ the backup and will create a `_drafts` folder for yours drafts.
 - To Fahri Cihan Demirci ([@femnad](https://github.com/femnad)) for
   adding support for the new backup format.
 
+- To Kiko Beats ([@Kikobeats](https://github.com/Kikobeats)) for setting
+  featured posts.
+
+- To Per Mortensen ([@proog](https://github.com/proog)) for adding support for
+  mobiledoc.
+
 ## Contributing
 
 1. Fork it ( https://github.com/eloyesp/jekyll-ghost-importer/fork )
