@@ -9,7 +9,7 @@ This program let you import your post on [ghost][1] to [jekyll][2]. It uses a
 
  [1]: https://ghost.org/about/
  [2]: http://jekyllrb.com/
- [3]: http://support.ghost.org/import-and-export-my-ghost-blog-settings-and-data/
+ [3]: https://help.ghost.org/hc/en-us/articles/224112927-Import-Export-Data
 
 ## Installation
 
