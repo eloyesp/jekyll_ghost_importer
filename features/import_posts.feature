@@ -34,6 +34,37 @@ Feature: Import posts
     You're live!
     """
 
+  Scenario: Import a simple backup file with posts in mobiledoc format
+    Given a file named "GhostBackup.json" with:
+    """
+    {
+        "data": {
+            "posts": [
+                {
+                    "title": "Welcome to Ghost",
+                    "slug": "welcome-to-ghost",
+                    "mobiledoc": "{\"version\":\"0.3.1\",\"markups\":[],\"atoms\":[],\"cards\":[[\"card-markdown\",{\"cardName\":\"card-markdown\",\"markdown\":\"You're live with mobiledoc!\"}]],\"sections\":[[10,0]]}",
+                    "featured": 0,
+                    "status": "published",
+                    "published_at": "2014-02-21T01:14:57.000Z"
+                }
+            ]
+        }
+    }
+    """
+    When I run `jekyll_ghost_importer GhostBackup.json`
+    Then a directory named "_posts" should exist
+    Then the file "_posts/2014-02-21-welcome-to-ghost.markdown" should contain:
+    """
+    ---
+    layout: post
+    title: Welcome to Ghost
+    date: '2014-02-21 01:14:57'
+    ---
+
+    You're live with mobiledoc!
+    """
+
   Scenario: Import a backup file with two posts.
     Given a file named "GhostBackup.json" with:
     """

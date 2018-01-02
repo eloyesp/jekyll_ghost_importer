@@ -95,7 +95,19 @@ class Post
   end
 
   def full_body
-    front_matter.to_yaml + "---\n\n" + post[:markdown]
+    front_matter.to_yaml + "---\n\n" + markdown
+  end
+
+  def markdown
+    if post[:markdown]
+      post[:markdown]
+    elsif post[:mobiledoc]
+      mobiledoc = JSON.parse post[:mobiledoc], symbolize_names: true
+      card = mobiledoc[:cards].find { |c| c.first == "card-markdown" }
+      card.last[:markdown]
+    else
+      ""
+    end
   end
 
   def basename
