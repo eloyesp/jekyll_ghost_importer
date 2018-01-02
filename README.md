@@ -1,6 +1,6 @@
-[![Code Climate](http://img.shields.io/codeclimate/github/eloyesp/jekyll_ghost_importer.svg?maxAge=1800)](https://codeclimate.com/github/eloyesp/jekyll_ghost_importer)
+[![Code Climate](https://img.shields.io/codeclimate/maintainability/eloyesp/jekyll_ghost_importer.svg?maxAge=1800)](https://codeclimate.com/github/eloyesp/jekyll_ghost_importer)
 [![Build status](https://img.shields.io/codeship/cb44c190-0061-0134-02b6-3a1fbd2b2974/master.svg?maxAge=1800)](https://codeship.com/projects/153176)
-[![Gem Version](http://img.shields.io/gem/v/jekyll_ghost_importer.svg?maxAge=2592000)](https://rubygems.org/gems/jekyll_ghost_importer)
+[![Gem Version](https://img.shields.io/gem/v/jekyll_ghost_importer.svg?maxAge=2592000)](https://rubygems.org/gems/jekyll_ghost_importer)
 
 # Jekyll ghost importer
 
