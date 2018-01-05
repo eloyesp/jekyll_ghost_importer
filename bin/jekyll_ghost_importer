@@ -26,20 +26,12 @@ FileUtils.mkdir_p("_drafts")
 
 $json = JSON.parse File.read(ARGV.pop), symbolize_names: true
 
-unless $json[:data].nil?
-  posts = $json[:data][:posts]
-else
-  posts = $json[:db].first[:data][:posts]
-end
-
 def there_are_tags?
   @tags ||=
     $json[:db] &&
     $json[:db].first[:data][:posts_tags] &&
     $json[:db].first[:data][:tags]
 end
-
-@imported = Hash.new(0)
 
 class Post
   # the source of the post
@@ -82,10 +74,10 @@ class Post
       'layout' => "post",
       'title'  => post[:title]
     }
-    
+
     front_matter_hash['featured'] = true if post[:featured] == 1
     front_matter_hash['image'] = post[:image] if post[:image] != nil
-    
+
     unless draft?
       front_matter_hash['date'] = date.strftime('%Y-%m-%d %H:%M:%S') if date
     end
@@ -135,11 +127,28 @@ class Post
   end
 end
 
-posts.each do |post|
-  post = Post.new post
-  post.import
-  @imported[:posts] += 1
-  @imported[:drafts] += 1 if post.draft?
+class PostRepository
+  attr_reader :posts
+
+  def initialize json
+    @json = json
+    @posts = data[:posts].map {|post_json| Post.new(post_json)}
+    @tags = data[:tags]
+    @posts_tags = data[:posts_tags]
+  end
+
+  def drafts
+    @posts.select &:draft?
+  end
+
+  private
+
+  def data
+    @json[:data] ? @json[:data] : @json[:db].first[:data]
+  end
 end
 
-puts "#{ @imported[:posts] } posts imported ( #{ @imported[:drafts] } draft )"
+repository = PostRepository.new($json)
+repository.posts.map &:import
+
+puts "#{ repository.posts.count } posts imported ( #{ repository.drafts.count } draft )"
