@@ -20,6 +20,7 @@ require 'fileutils'
 require 'json'
 require 'date'
 require 'yaml'
+require 'ostruct'
 
 FileUtils.mkdir_p("_posts")
 FileUtils.mkdir_p("_drafts")
@@ -33,13 +34,8 @@ def there_are_tags?
     $json[:db].first[:data][:tags]
 end
 
-class Post
+class Post < OpenStruct
   # the source of the post
-  attr_reader :post
-
-  def initialize post
-    @post = post
-  end
 
   def import
     puts "Importing #{ filename }"
@@ -47,7 +43,7 @@ class Post
   end
 
   def draft?
-    post[:status] == 'draft'
+    status == 'draft'
   end
 
   private
@@ -61,22 +57,22 @@ class Post
   end
 
   def date
-    case post[:published_at]
+    case published_at
     when String
-      DateTime.parse(post[:published_at])
+      DateTime.parse(published_at)
     when Integer
-      Time.at(post[:published_at] / 1000).utc.to_datetime
+      Time.at(published_at / 1000).utc.to_datetime
     end
   end
 
   def front_matter
     front_matter_hash = {
       'layout' => "post",
-      'title'  => post[:title]
+      'title'  => title
     }
 
-    front_matter_hash['featured'] = true if post[:featured] == 1
-    front_matter_hash['image'] = post[:image] if post[:image] != nil
+    front_matter_hash['featured'] = true if featured == 1
+    front_matter_hash['image'] = image if image != nil
 
     unless draft?
       front_matter_hash['date'] = date.strftime('%Y-%m-%d %H:%M:%S') if date
@@ -85,14 +81,10 @@ class Post
     front_matter_hash
   end
 
-  def slug
-    post[:slug]
-  end
-
   def tags
     if there_are_tags?
       post_tags = $json[:db].first[:data][:posts_tags].select do |pt|
-        pt[:post_id] == post[:id]
+        pt[:post_id] == id
       end
       tags_ids = post_tags.map { |pt| pt[:tag_id] }
       tags = $json[:db].first[:data][:tags].select do |t|
@@ -103,15 +95,15 @@ class Post
   end
 
   def full_body
-    front_matter.to_yaml + "---\n\n" + markdown
+    front_matter.to_yaml + "---\n\n" + markdown_body
   end
 
-  def markdown
-    if post[:markdown]
-      post[:markdown]
-    elsif post[:mobiledoc]
-      mobiledoc = JSON.parse post[:mobiledoc], symbolize_names: true
-      card = mobiledoc[:cards].find { |c| c.first == "card-markdown" }
+  def markdown_body
+    if markdown
+      markdown
+    elsif mobiledoc
+      mobiledoc_data = JSON.parse mobiledoc, symbolize_names: true
+      card = mobiledoc_data[:cards].find { |c| c.first == "card-markdown" }
       card.last[:markdown]
     else
       ""
