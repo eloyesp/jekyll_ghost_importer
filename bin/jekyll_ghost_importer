@@ -22,21 +22,7 @@ require 'date'
 require 'yaml'
 require 'ostruct'
 
-FileUtils.mkdir_p("_posts")
-FileUtils.mkdir_p("_drafts")
-
-$json = JSON.parse File.read(ARGV.pop), symbolize_names: true
-
-def there_are_tags?
-  @tags ||=
-    $json[:db] &&
-    $json[:db].first[:data][:posts_tags] &&
-    $json[:db].first[:data][:tags]
-end
-
 class Post < OpenStruct
-  # the source of the post
-
   def import
     puts "Importing #{ filename }"
     File.write filename, full_body
@@ -44,6 +30,10 @@ class Post < OpenStruct
 
   def draft?
     status == 'draft'
+  end
+
+  def tags
+    @tags ||= []
   end
 
   private
@@ -74,24 +64,9 @@ class Post < OpenStruct
     front_matter_hash['featured'] = true if featured == 1
     front_matter_hash['image'] = image if image != nil
 
-    unless draft?
-      front_matter_hash['date'] = date.strftime('%Y-%m-%d %H:%M:%S') if date
-    end
-    front_matter_hash['tags'] = tags if tags && !tags.empty?
+    front_matter_hash['date'] = date.strftime('%Y-%m-%d %H:%M:%S') if !draft? && date
+    front_matter_hash['tags'] = tags if tags.any?
     front_matter_hash
-  end
-
-  def tags
-    if there_are_tags?
-      post_tags = $json[:db].first[:data][:posts_tags].select do |pt|
-        pt[:post_id] == id
-      end
-      tags_ids = post_tags.map { |pt| pt[:tag_id] }
-      tags = $json[:db].first[:data][:tags].select do |t|
-        tags_ids.include? t[:id]
-      end
-      tags.map { |t| t[:slug] }
-    end
   end
 
   def full_body
@@ -124,9 +99,10 @@ class PostRepository
 
   def initialize json
     @json = json
-    @posts = data[:posts].map {|post_json| Post.new(post_json)}
-    @tags = data[:tags]
-    @posts_tags = data[:posts_tags]
+    @posts = (data[:posts] || []).map { |post_json| Post.new(post_json) }
+    @tags = data[:tags] || []
+    @posts_tags = data[:posts_tags] || []
+    assign_tags_to_posts
   end
 
   def drafts
@@ -135,12 +111,33 @@ class PostRepository
 
   private
 
+  def assign_tags_to_posts
+    @posts_tags.each do |post_tag|
+      post = get_post(post_tag[:post_id])
+      tag = get_tag(post_tag[:tag_id])
+      post && tag && post.tags << tag[:slug]
+    end
+  end
+
+  def get_post id
+    @posts.detect { |post| post.id == id }
+  end
+
+  def get_tag id
+    @tags.detect { |tag| tag[:id] == id }
+  end
+
   def data
     @json[:data] ? @json[:data] : @json[:db].first[:data]
   end
 end
 
-repository = PostRepository.new($json)
+FileUtils.mkdir_p("_posts")
+FileUtils.mkdir_p("_drafts")
+
+json = JSON.parse File.read(ARGV.pop), symbolize_names: true
+
+repository = PostRepository.new(json)
 repository.posts.map &:import
 
 puts "#{ repository.posts.count } posts imported ( #{ repository.drafts.count } draft )"
