@@ -20,42 +20,20 @@ require 'fileutils'
 require 'json'
 require 'date'
 require 'yaml'
+require 'ostruct'
 
-FileUtils.mkdir_p("_posts")
-FileUtils.mkdir_p("_drafts")
-
-$json = JSON.parse File.read(ARGV.pop), symbolize_names: true
-
-unless $json[:data].nil?
-  posts = $json[:data][:posts]
-else
-  posts = $json[:db].first[:data][:posts]
-end
-
-def there_are_tags?
-  @tags ||=
-    $json[:db] &&
-    $json[:db].first[:data][:posts_tags] &&
-    $json[:db].first[:data][:tags]
-end
-
-@imported = Hash.new(0)
-
-class Post
-  # the source of the post
-  attr_reader :post
-
-  def initialize post
-    @post = post
-  end
-
+class Post < OpenStruct
   def import
     puts "Importing #{ filename }"
     File.write filename, full_body
   end
 
   def draft?
-    post[:status] == 'draft'
+    status == 'draft'
+  end
+
+  def tags
+    @tags ||= []
   end
 
   private
@@ -69,57 +47,38 @@ class Post
   end
 
   def date
-    case post[:published_at]
+    case published_at
     when String
-      DateTime.parse(post[:published_at])
+      DateTime.parse(published_at)
     when Integer
-      Time.at(post[:published_at] / 1000).utc.to_datetime
+      Time.at(published_at / 1000).utc.to_datetime
     end
   end
 
   def front_matter
     front_matter_hash = {
       'layout' => "post",
-      'title'  => post[:title]
+      'title'  => title
     }
-    
-    front_matter_hash['featured'] = true if post[:featured] == 1
-    front_matter_hash['image'] = post[:image] if post[:image] != nil
-    
-    unless draft?
-      front_matter_hash['date'] = date.strftime('%Y-%m-%d %H:%M:%S') if date
-    end
-    front_matter_hash['tags'] = tags if tags && !tags.empty?
+
+    front_matter_hash['featured'] = true if featured == 1
+    front_matter_hash['image'] = image if image != nil
+
+    front_matter_hash['date'] = date.strftime('%Y-%m-%d %H:%M:%S') if !draft? && date
+    front_matter_hash['tags'] = tags if tags.any?
     front_matter_hash
   end
 
-  def slug
-    post[:slug]
-  end
-
-  def tags
-    if there_are_tags?
-      post_tags = $json[:db].first[:data][:posts_tags].select do |pt|
-        pt[:post_id] == post[:id]
-      end
-      tags_ids = post_tags.map { |pt| pt[:tag_id] }
-      tags = $json[:db].first[:data][:tags].select do |t|
-        tags_ids.include? t[:id]
-      end
-      tags.map { |t| t[:slug] }
-    end
-  end
-
   def full_body
-    front_matter.to_yaml + "---\n\n" + markdown
+    front_matter.to_yaml + "---\n\n" + markdown_body
   end
 
-  def markdown
-    if post[:markdown]
-      post[:markdown]
-    elsif post[:mobiledoc]
-      mobiledoc = JSON.parse post[:mobiledoc], symbolize_names: true
-      card = mobiledoc[:cards].find { |c| c.first == "card-markdown" }
+  def markdown_body
+    if markdown
+      markdown
+    elsif mobiledoc
+      mobiledoc_data = JSON.parse mobiledoc, symbolize_names: true
+      card = mobiledoc_data[:cards].find { |c| c.first == "card-markdown" }
       card.last[:markdown]
     else
       ""
@@ -135,11 +94,50 @@ class Post
   end
 end
 
-posts.each do |post|
-  post = Post.new post
-  post.import
-  @imported[:posts] += 1
-  @imported[:drafts] += 1 if post.draft?
+class PostRepository
+  attr_reader :posts
+
+  def initialize json
+    @json = json
+    @posts = (data[:posts] || []).map { |post_json| Post.new(post_json) }
+    @tags = data[:tags] || []
+    @posts_tags = data[:posts_tags] || []
+    assign_tags_to_posts
+  end
+
+  def drafts
+    @posts.select &:draft?
+  end
+
+  private
+
+  def assign_tags_to_posts
+    @posts_tags.each do |post_tag|
+      post = get_post(post_tag[:post_id])
+      tag = get_tag(post_tag[:tag_id])
+      post && tag && post.tags << tag[:slug]
+    end
+  end
+
+  def get_post id
+    @posts.detect { |post| post.id == id }
+  end
+
+  def get_tag id
+    @tags.detect { |tag| tag[:id] == id }
+  end
+
+  def data
+    @json[:data] ? @json[:data] : @json[:db].first[:data]
+  end
 end
 
-puts "#{ @imported[:posts] } posts imported ( #{ @imported[:drafts] } draft )"
+FileUtils.mkdir_p("_posts")
+FileUtils.mkdir_p("_drafts")
+
+json = JSON.parse File.read(ARGV.pop), symbolize_names: true
+
+repository = PostRepository.new(json)
+repository.posts.map &:import
+
+puts "#{ repository.posts.count } posts imported ( #{ repository.drafts.count } draft )"
