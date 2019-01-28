@@ -295,6 +295,30 @@ Feature: Import posts
     Something here
     """
 
+  Scenario: Import a backup file with version 004
+    Given a ghost backup file version 004 with some sample posts
+    When I run `jekyll_ghost_importer GhostBackup.json`
+    Then it should pass with:
+    """
+    Importing _posts/2016-05-31-the-makers-guide-to-the-zombie-apocalypse.markdown
+    1 posts imported ( 0 draft )
+    """
+    And a directory named "_posts" should exist
+    And the following files should exist:
+      | _posts/2016-05-31-the-makers-guide-to-the-zombie-apocalypse.markdown |
+    And the file "_posts/2016-05-31-the-makers-guide-to-the-zombie-apocalypse.markdown" should contain:
+    """
+    ---
+    layout: post
+    title: The Maker's Guide to the Zombie Apocalypse
+    date: '2016-05-31 20:03:23'
+    tags:
+    - the-makers-guide-to-the-zombie-apocalypse
+    ---
+
+    [The Maker's Guide to the Zombie Apocalypse](http://amzn.to/1spRddk), a book written by Simon Monk (who I gather is quite well known within the maker community, having [authored various books](http://amzn.to/1spRqwW) on the Arduino and Raspberry Pi)
+    """
+
   Scenario: Import a draft with an invalid published_at date
     Given a file named "draft_with_invalid_date.json" with:
     """

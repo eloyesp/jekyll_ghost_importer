@@ -1,0 +1,88 @@
+{
+  "db": [
+    {
+      "meta": {
+        "version": "2.6.0"
+      },
+      "data": {
+        "posts": [
+          {
+            "id": "5c424716e9286b0021583e8d",
+            "uuid": "dc097038-8688-4825-90d9-5c438580c233",
+            "title": "The Maker's Guide to the Zombie Apocalypse",
+            "slug": "the-makers-guide-to-the-zombie-apocalypse",
+            "mobiledoc": "{\"version\":\"0.3.1\",\"atoms\":[],\"cards\":[],\"markups\":[[\"a\",[\"href\",\"http://amzn.to/1spRddk\"]],[\"a\",[\"href\",\"http://amzn.to/1spRqwW\"]]],\"sections\":[]}",
+            "html": "<p><a href=\"http://amzn.to/1spRddk\">The Maker's Guide to the Zombie Apocalypse</a>, a book written by Simon Monk (who I gather is quite well known within the maker community, having <a href=\"http://amzn.to/1spRqwW\">authored various books</a> on the Arduino and Raspberry Pi)</p>",
+            "comment_id": "2",
+            "plaintext": "The Maker's Guide to the Zombie Apocalypse",
+            "feature_image": "//d1a0j00khen1nw.cloudfront.net/2018/02/IMG_0695-1-.jpg",
+            "featured": 0,
+            "page": 0,
+            "status": "published",
+            "locale": null,
+            "visibility": "public",
+            "meta_title": null,
+            "meta_description": null,
+            "author_id": "1",
+            "created_at": "2016-05-31T19:54:06.000Z",
+            "created_by": "1",
+            "updated_at": "2018-11-22T12:47:51.000Z",
+            "updated_by": "1",
+            "published_at": "2016-05-31T20:03:23.000Z",
+            "published_by": "1",
+            "custom_excerpt": "The Maker's Guide to the Zombie Apocalypse, a book written by Simon Monk is clearly something that knows how to motivate me...",
+            "codeinjection_head": null,
+            "codeinjection_foot": null,
+            "og_image": null,
+            "og_title": null,
+            "og_description": null,
+            "twitter_image": null,
+            "twitter_title": null,
+            "twitter_description": null,
+            "custom_template": ""
+          }
+        ],
+        "posts_authors": [
+          {
+            "id": "5c424716e9286b0021583eb3",
+            "post_id": "5c424716e9286b0021583e8d",
+            "author_id": "1",
+            "sort_order": 0
+          }
+        ],
+        "posts_tags": [
+          {
+            "id": "5c424716e9286b0021583eaf",
+            "post_id": "5c424716e9286b0021583e8d",
+            "tag_id": "5c42470be9286b0021583aec",
+            "sort_order": 0
+          }
+        ],
+        "tags": [
+          {
+            "id": "5c42470be9286b0021583aec",
+            "name": "The Maker's Guide to the Zombie Apocalypse",
+            "slug": "the-makers-guide-to-the-zombie-apocalypse",
+            "description": null,
+            "feature_image": "//d1a0j00khen1nw.cloudfront.net/2018/02/IMG_0695-1-.jpg",
+            "parent_id": null,
+            "visibility": "public",
+            "meta_title": null,
+            "meta_description": null,
+            "created_at": "2018-02-14T10:44:20.000Z",
+            "created_by": "1",
+            "updated_at": "2018-10-11T21:35:26.000Z",
+            "updated_by": "1"
+          }
+        ],
+        "users": [
+          {
+            "id": "1",
+            "name": "DH",
+            "slug": "daniel"
+          }
+        ]
+      }
+    }
+  ]
+}

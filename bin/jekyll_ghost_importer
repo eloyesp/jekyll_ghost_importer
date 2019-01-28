@@ -21,6 +21,7 @@ require 'json'
 require 'date'
 require 'yaml'
 require 'ostruct'
+require 'reverse_markdown'
 
 class Post < OpenStruct
   def import
@@ -78,11 +79,15 @@ class Post < OpenStruct
       markdown
     elsif mobiledoc
       mobiledoc_data = JSON.parse mobiledoc, symbolize_names: true
-      card = mobiledoc_data[:cards].find { |c| c.first == "card-markdown" }
-      card.last[:markdown]
+      markdown_card = mobiledoc_data[:cards].find { |c| c.first == "card-markdown" }
+      markdown_card ? markdown_card.last[:markdown] : markdown_from_html
     else
       ""
     end
+  end
+
+  def markdown_from_html
+    ReverseMarkdown.convert html
   end
 
   def basename
