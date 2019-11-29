@@ -63,7 +63,8 @@ class Post < OpenStruct
     }
 
     front_matter_hash['featured'] = true if featured == 1
-    front_matter_hash['image'] = image if image != nil
+    front_matter_hash['image'] = feature_image if feature_image != nil
+    front_matter_hash['image'] = image if (image != nil and front_matter_hash['image'] == nil)
 
     front_matter_hash['date'] = date.strftime('%Y-%m-%d %H:%M:%S') if !draft? && date
     front_matter_hash['tags'] = tags if tags.any?
