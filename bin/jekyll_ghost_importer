@@ -77,10 +77,12 @@ class Post < OpenStruct
   def markdown_body
     if markdown
       markdown
+    elsif html
+      markdown_from_html
     elsif mobiledoc
       mobiledoc_data = JSON.parse mobiledoc, symbolize_names: true
       markdown_card = mobiledoc_data[:cards].find { |c| c.first == "card-markdown" }
-      markdown_card ? markdown_card.last[:markdown] : markdown_from_html
+      markdown_card ? markdown_card.last[:markdown] : ""
     else
       ""
     end

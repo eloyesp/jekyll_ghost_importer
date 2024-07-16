@@ -1,0 +1,87 @@
+{
+    "db": [
+      {
+        "meta": {
+          "exported_on": 1720851917028,
+          "version": "5.87.1"
+        },
+        "data": {
+          "posts": [
+            {
+              "id": "658e2b826de70700013de598",
+              "uuid": "8c66d0ed-cf5b-4a18-aeb1-c0c2ec44f8c6",
+              "title": "Moses: Responding to God’s call",
+              "slug": "moses-responding-to-gods-call",
+              "mobiledoc": null,
+              "html": "<p><em>This is an original lesson outline I prepared for one of my weekly Bible studies in 2023.</em></p><ul><li>We know how God has used Moses for the special assignment of leading the Israelites out of Egypt towards the Promised Land.</li><li>But before this, Moses had to be called by God. In the popular Sunday School story, God appeared to Moses in a burning bush (Exodus 3:1-10).</li><li>At first, Moses had many reservations about the call, even telling God to “please send someone else” (Exodus 4:13).</li><li>Like Moses, God has called us to fulfill certain assignments in life (family, career, business, etc), and we want to accomplish them in Jesus’ Name.&nbsp;</li><li>So today, we’ll look at how God responds to Moses’ reservations/excuses, which happen to parallel the same excuses we typically make when presented with these great dreams, goals, and plans God plants in our hearts.</li></ul>",
+              "feature_image": "https://images.unsplash.com/photo-1500670602153-5e2dd3c75f20?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDJ8fGJ1cm5pbmclMjBidXNofGVufDB8fHx8MTcwMzgxNzA1MXww&ixlib=rb-4.0.3&q=80&w=2000",
+              "featured": 0,
+              "type": "post",
+              "status": "published",
+              "locale": null,
+              "visibility": "public",
+              "email_recipient_filter": "all",
+              "created_at": "2023-12-29T02:14:26.000Z",
+              "updated_at": "2023-12-29T04:30:30.000Z",
+              "published_at": "2023-12-29T02:17:00.000Z",
+              "custom_excerpt": null,
+              "codeinjection_head": null,
+              "codeinjection_foot": null,
+              "custom_template": null,
+              "canonical_url": null,
+              "newsletter_id": null,
+              "show_title_and_feature_image": 1
+            }
+          ],
+          "posts_authors": [
+            {
+              "id": "658e2b826de70700013de599",
+              "post_id": "658e2b826de70700013de598",
+              "author_id": "1",
+              "sort_order": 0
+            }
+          ],
+          "posts_tags": [
+            {
+              "id": "658e32e96de70700013de5c5",
+              "post_id": "658e2b826de70700013de598",
+              "tag_id": "658e32e96de70700013de5c4",
+              "sort_order": 0
+            }
+          ],
+          "tags": [
+            {
+              "id": "658e32e96de70700013de5c4",
+              "name": "Bible study",
+              "slug": "bible-study",
+              "description": null,
+              "feature_image": null,
+              "parent_id": null,
+              "visibility": "public",
+              "og_image": null,
+              "og_title": null,
+              "og_description": null,
+              "twitter_image": null,
+              "twitter_title": null,
+              "twitter_description": null,
+              "meta_title": null,
+              "meta_description": null,
+              "codeinjection_head": null,
+              "codeinjection_foot": null,
+              "canonical_url": null,
+              "accent_color": null,
+              "created_at": "2023-12-29T02:46:01.000Z",
+              "updated_at": "2023-12-29T02:46:39.000Z"
+            }
+          ],
+          "users": [
+            {
+              "id": "1",
+              "name": "Chechu Siscar",
+              "slug": "chechu"
+            }
+          ]
+        }
+      }
+    ]
+  }

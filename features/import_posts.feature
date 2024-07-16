@@ -319,6 +319,37 @@ Feature: Import posts
     [The Maker's Guide to the Zombie Apocalypse](http://amzn.to/1spRddk), a book written by Simon Monk (who I gather is quite well known within the maker community, having [authored various books](http://amzn.to/1spRqwW) on the Arduino and Raspberry Pi)
     """
 
+  Scenario: Import a backup file with version 004
+    Given a ghost backup file version 004 with some sample posts
+    When I run `jekyll_ghost_importer GhostBackup.json`
+    Then it should pass with:
+    """
+    Importing _posts/2023-12-29-moses-responding-to-gods-call.markdown
+    1 posts imported ( 0 draft )
+    """
+    And a directory named "_posts" should exist
+    And the following files should exist:
+      | _posts/2023-12-29-moses-responding-to-gods-call.markdown |
+    And the file "_posts/2023-12-29-moses-responding-to-gods-call.markdown" should contain:
+    """
+    ---
+    layout: post
+    title: 'Moses: Responding to God’s call'
+    date: '2023-12-29 02:17:00'
+    tags:
+    - bible-study
+    ---
+
+    _This is an original lesson outline I prepared for one of my weekly Bible studies in 2023._
+
+    - We know how God has used Moses for the special assignment of leading the Israelites out of Egypt towards the Promised Land.
+    - But before this, Moses had to be called by God. In the popular Sunday School story, God appeared to Moses in a burning bush (Exodus 3:1-10).
+    - At first, Moses had many reservations about the call, even telling God to “please send someone else” (Exodus 4:13).
+    - Like Moses, God has called us to fulfill certain assignments in life (family, career, business, etc), and we want to accomplish them in Jesus’ Name.&nbsp;
+    - So today, we’ll look at how God responds to Moses’ reservations/excuses, which happen to parallel the same excuses we typically make when presented with these great dreams, goals, and plans God plants in our hearts.
+
+    """
+
   Scenario: Import a draft with an invalid published_at date
     Given a file named "draft_with_invalid_date.json" with:
     """
